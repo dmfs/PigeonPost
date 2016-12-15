@@ -21,7 +21,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 
@@ -29,16 +28,18 @@ import org.dmfs.pigeonpost.Cage;
 import org.dmfs.pigeonpost.Dovecote;
 import org.dmfs.pigeonpost.Pigeon;
 
+import java.io.Serializable;
+
 
 /**
  * A {@link Dovecote} that receives {@link Pigeon} with a {@link LocalBroadcastManager}.
  * <p>
- * {@link LocalBroadcastCage}s are good for communication within the same process. Note that sent {@link Pigeon}s are lost of there are no active {@link
- * LocalBroadcastDovecote}s available.
+ * {@link SerializableCage}s are good for communication within the same process. Note that sent {@link Pigeon}s are lost if there are no active {@link
+ * SerializableDovecote}s available.
  *
  * @author Marten Gajda
  */
-public final class LocalBroadcastDovecote<T extends Parcelable> implements Dovecote<T>
+public final class SerializableDovecote<T extends Serializable> implements Dovecote<T>
 {
     private final Context mContext;
     private final String mName;
@@ -56,7 +57,7 @@ public final class LocalBroadcastDovecote<T extends Parcelable> implements Dovec
      * @param callback
      *         The {@link OnPigeonReturnCallback} called when a {@link Pigeon} arrived.
      */
-    public LocalBroadcastDovecote(@NonNull Context context, @NonNull String name, @NonNull OnPigeonReturnCallback<T> callback)
+    public SerializableDovecote(@NonNull Context context, @NonNull String name, @NonNull OnPigeonReturnCallback<T> callback)
     {
         mContext = context;
         mName = name;
@@ -70,7 +71,7 @@ public final class LocalBroadcastDovecote<T extends Parcelable> implements Dovec
     @Override
     public Cage<T> cage()
     {
-        return new LocalBroadcastCage<T>(new Intent(mName));
+        return new SerializableCage<T>(new Intent(mName));
     }
 
 
@@ -81,7 +82,7 @@ public final class LocalBroadcastDovecote<T extends Parcelable> implements Dovec
     }
 
 
-    private static class DovecotReceiver<T extends Parcelable> extends BroadcastReceiver
+    private static class DovecotReceiver<T extends Serializable> extends BroadcastReceiver
     {
         private final OnPigeonReturnCallback<T> mCallback;
 
@@ -95,7 +96,7 @@ public final class LocalBroadcastDovecote<T extends Parcelable> implements Dovec
         @Override
         public void onReceive(Context context, Intent intent)
         {
-            mCallback.onPigeonReturn((T) intent.getParcelableExtra("org.dmfs.pigeonpost.DATA"));
+            mCallback.onPigeonReturn((T) intent.getSerializableExtra("org.dmfs.pigeonpost.DATA"));
         }
     }
 }

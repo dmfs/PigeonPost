@@ -20,31 +20,32 @@ package org.dmfs.pigeonpost.localbroadcast;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 
 import org.dmfs.pigeonpost.Cage;
 import org.dmfs.pigeonpost.Pigeon;
 
+import java.io.Serializable;
+
 
 /**
- * A {@link Cage} to send {@link Parcelable} objects via a {@link LocalBroadcastManager}.
+ * A {@link Cage} to send {@link Serializable} objects via a {@link LocalBroadcastManager}.
  *
  * @author Marten Gajda
  */
-public final class LocalBroadcastCage<T extends Parcelable> implements Cage<T>
+public final class SerializableCage<T extends Serializable> implements Cage<T>
 {
     private final Intent mIntent;
 
 
     /**
-     * Creates a {@link LocalBroadcastCage} that sends pigeons to the given {@link Intent}.
+     * Creates a {@link SerializableCage} that sends pigeons to the given {@link Intent}.
      *
      * @param intent
      *         The intent to send the broadcast to.
      */
-    public LocalBroadcastCage(@NonNull Intent intent)
+    public SerializableCage(@NonNull Intent intent)
     {
         mIntent = intent;
     }
@@ -83,19 +84,19 @@ public final class LocalBroadcastCage<T extends Parcelable> implements Cage<T>
     }
 
 
-    public final static Parcelable.Creator<LocalBroadcastCage> CREATOR = new Parcelable.Creator<LocalBroadcastCage>()
+    public final static Creator<SerializableCage> CREATOR = new Creator<SerializableCage>()
     {
         @Override
-        public LocalBroadcastCage createFromParcel(Parcel source)
+        public SerializableCage createFromParcel(Parcel source)
         {
-            return new LocalBroadcastCage((Intent) source.readParcelable(getClass().getClassLoader()));
+            return new SerializableCage((Intent) source.readSerializable());
         }
 
 
         @Override
-        public LocalBroadcastCage[] newArray(int size)
+        public SerializableCage[] newArray(int size)
         {
-            return new LocalBroadcastCage[size];
+            return new SerializableCage[size];
         }
     };
 }
