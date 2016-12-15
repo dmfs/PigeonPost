@@ -63,7 +63,7 @@ public final class LocalBroadcastCage<T extends Parcelable> implements Cage<T>
                 LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(context);
                 Intent intent = new Intent(originalIntent);
                 intent.putExtra("org.dmfs.pigeonpost.DATA", payload);
-                localBroadcastManager.sendBroadcast(intent);
+                localBroadcastManager.sendBroadcastSync(intent);
             }
         };
     }
