@@ -28,6 +28,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import org.dmfs.pigeonpost.Cage;
 import org.dmfs.pigeonpost.Dovecote;
 import org.dmfs.pigeonpost.Pigeon;
+import org.dmfs.pigeonpost.localbroadcast.tools.MainThreadExecutor;
 
 
 /**
@@ -42,7 +43,6 @@ public final class ParcelableDovecote<T extends Parcelable> implements Dovecote<
 {
     private final Context mContext;
     private final String mName;
-    private final OnPigeonReturnCallback<T> mCallback;
     private final BroadcastReceiver mReceiver;
 
 
@@ -60,8 +60,7 @@ public final class ParcelableDovecote<T extends Parcelable> implements Dovecote<
     {
         mContext = context;
         mName = name;
-        mCallback = callback;
-        mReceiver = new DovecotReceiver<T>(mCallback);
+        mReceiver = new DovecotReceiver<T>(callback);
         LocalBroadcastManager.getInstance(context).registerReceiver(mReceiver, new IntentFilter(mName));
     }
 
@@ -93,9 +92,17 @@ public final class ParcelableDovecote<T extends Parcelable> implements Dovecote<
 
 
         @Override
-        public void onReceive(Context context, Intent intent)
+        public void onReceive(Context context, final Intent intent)
         {
-            mCallback.onPigeonReturn((T) intent.getParcelableExtra("org.dmfs.pigeonpost.DATA"));
+            MainThreadExecutor.INSTANCE.execute(new Runnable()
+            {
+                @SuppressWarnings("unchecked")
+                @Override
+                public void run()
+                {
+                    mCallback.onPigeonReturn((T) intent.getParcelableExtra("org.dmfs.pigeonpost.DATA"));
+                }
+            });
         }
     }
 }

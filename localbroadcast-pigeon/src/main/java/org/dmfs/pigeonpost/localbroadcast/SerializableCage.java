@@ -89,7 +89,7 @@ public final class SerializableCage<T extends Serializable> implements Cage<T>
         @Override
         public SerializableCage createFromParcel(Parcel source)
         {
-            return new SerializableCage((Intent) source.readSerializable());
+            return new SerializableCage((Intent) source.readParcelable(getClass().getClassLoader()));
         }
 
 
