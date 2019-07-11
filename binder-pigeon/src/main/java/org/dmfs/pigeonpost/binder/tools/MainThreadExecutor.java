@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.dmfs.pigeonpost.localbroadcast.tools;
+package org.dmfs.pigeonpost.binder.tools;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -26,7 +26,7 @@ import androidx.annotation.NonNull;
 
 
 /**
- * An {@link Executor} that always executes on the main thread.
+ * An {@link Executor} which always executes on the main thread.
  *
  * @author Marten Gajda
  */
@@ -40,14 +40,6 @@ public final class MainThreadExecutor implements Executor
     @Override
     public void execute(@NonNull Runnable command)
     {
-        if (Looper.getMainLooper() == Looper.myLooper())
-        {
-            // on UI thread already
-            command.run();
-        }
-        else
-        {
-            UI_THREAD_HANDLER.post(command);
-        }
+        UI_THREAD_HANDLER.post(command);
     }
 }

@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/PigeonPost.iml" filepath="$PROJECT_DIR$/PigeonPost.iml" />
+      <module fileurl="file://$PROJECT_DIR$/binder-pigeon/binder-pigeon.iml" filepath="$PROJECT_DIR$/binder-pigeon/binder-pigeon.iml" />
       <module fileurl="file://$PROJECT_DIR$/demo/demo.iml" filepath="$PROJECT_DIR$/demo/demo.iml" />
       <module fileurl="file://$PROJECT_DIR$/localbroadcast-pigeon/localbroadcast-pigeon.iml" filepath="$PROJECT_DIR$/localbroadcast-pigeon/localbroadcast-pigeon.iml" />
       <module fileurl="file://$PROJECT_DIR$/pigeon-post/pigeon-post.iml" filepath="$PROJECT_DIR$/pigeon-post/pigeon-post.iml" />

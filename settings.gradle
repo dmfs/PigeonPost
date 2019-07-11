@@ -1,1 +1,1 @@
-include ':demo', ':pigeon-post', ':localbroadcast-pigeon'
+include ':demo', ':pigeon-post', ':localbroadcast-pigeon', ':binder-pigeon'

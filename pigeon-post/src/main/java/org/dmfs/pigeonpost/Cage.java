@@ -18,7 +18,8 @@
 package org.dmfs.pigeonpost;
 
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
 
 
 /**

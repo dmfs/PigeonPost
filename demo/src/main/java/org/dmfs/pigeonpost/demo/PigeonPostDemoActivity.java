@@ -1,28 +1,27 @@
 package org.dmfs.pigeonpost.demo;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
 import org.dmfs.pigeonpost.Dovecote;
-import org.dmfs.pigeonpost.localbroadcast.SerializableDovecote;
+import org.dmfs.pigeonpost.binder.BinderDovecote;
 
-import java.io.Serializable;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 
-public class PigeonPostDemoActivity extends AppCompatActivity implements View.OnClickListener, Dovecote.OnPigeonReturnCallback<Serializable>
+public class PigeonPostDemoActivity extends AppCompatActivity implements View.OnClickListener, Dovecote.OnPigeonReturnCallback<Bundle>
 {
 
-    private Dovecote<Serializable> mDovecote;
+    private Dovecote<Bundle> mDovecote;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        mDovecote = new SerializableDovecote<>(this, "main", this);
+        mDovecote = new BinderDovecote(this);
         setContentView(R.layout.activity_pigeon_post_demo);
         findViewById(R.id.main_thread_button).setOnClickListener(this);
         findViewById(R.id.background_thread_button).setOnClickListener(this);
@@ -42,7 +41,9 @@ public class PigeonPostDemoActivity extends AppCompatActivity implements View.On
     {
         if (v.getId() == R.id.main_thread_button)
         {
-            mDovecote.cage().pigeon("Send from UI thread").send(this);
+            Bundle b = new Bundle();
+            b.putString("a", "Ui thread");
+            mDovecote.cage().pigeon(b).send(this);
         }
         if (v.getId() == R.id.background_thread_button)
         {
@@ -51,7 +52,9 @@ public class PigeonPostDemoActivity extends AppCompatActivity implements View.On
                 @Override
                 public void run()
                 {
-                    mDovecote.cage().pigeon("Send from background thread").send(PigeonPostDemoActivity.this);
+                    Bundle b = new Bundle();
+                    b.putString("a", "background thread");
+                    mDovecote.cage().pigeon(b).send(PigeonPostDemoActivity.this);
                 }
             }).start();
         }
@@ -59,7 +62,7 @@ public class PigeonPostDemoActivity extends AppCompatActivity implements View.On
 
 
     @Override
-    public void onPigeonReturn(@NonNull Serializable payload)
+    public void onPigeonReturn(@NonNull Bundle payload)
     {
         ((TextView) findViewById(R.id.text)).setText(
                 String.format("Received Pigeon \"%s\" on Thread \"%s\"", payload.toString(), Thread.currentThread().getName()));

@@ -17,7 +17,7 @@
 
 package org.dmfs.pigeonpost;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 
 /**
